@@ -12,3 +12,5 @@ Gradle项目群
 
 二、gradlew\gradle\wrapper\gradle-wrapper.properties文件中的distributionUrl地址，改为内网地址。
 
+
+三、gradlew-gui.vbs为启动Gradle GUI工具的VB脚本。
