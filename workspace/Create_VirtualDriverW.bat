@@ -50,7 +50,7 @@ goto:CreateVirtualDisks
 set FILE_NAME="%STARTUP_DIR%\CreateVirtualDisks_%DISK_NAME%.bat"
 
 ::生成创建虚拟盘符的批处理文件
-echo 成创建虚拟盘符的批处理文件%FILE_NAME%
+echo 生成创建虚拟盘符的批处理文件%FILE_NAME%
 echo subst /d %DISK_NAME%: > %FILE_NAME%
 echo subst %DISK_NAME%: "%CODE_DIR%" >> %FILE_NAME%
 
