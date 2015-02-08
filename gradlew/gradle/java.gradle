@@ -1,0 +1,79 @@
+/**
+ * java插件的设置
+ */
+allprojects { project ->
+    plugins.withType(JavaPlugin) {
+        globalCleanupProject.dependsOn 'clean'
+
+        group = 'com.yuan.ssh'
+        version = '0.0.1-SNAPSHOT'
+
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
+
+        [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+        dependencies { testCompile "junit:junit:4.11" }
+    }
+
+
+    afterEvaluate {
+        plugins.withType(JavaPlugin) {
+            jar {
+                description = "生成${new File(destinationDir, archiveName)}。"
+                doFirst { logger.info(description) }
+            }
+
+            //生成**-javadoc.jar
+            task javadocJar(type: Jar) {
+                dependsOn javadoc
+                group jar.group
+                from javadoc.destinationDir
+                classifier = 'javadoc'
+                description = "生成${new File(destinationDir, archiveName)}。"
+                doFirst { logger.info(description) }
+            }
+
+            //生成**-sources.jar
+            task sourcesJar(type: Jar) {
+                group jar.group
+                from sourceSets.main.allSource
+                classifier = 'sources'
+                description = "生成${new File(destinationDir, archiveName)}。"
+                doFirst { logger.info(description) }
+            }
+
+            //生成**-test.jar
+            task testJar(type: Jar) {
+                group jar.group
+                from sourceSets.test.allSource
+                classifier = 'test'
+                description = "生成${new File(destinationDir, archiveName)}。"
+                doFirst { logger.info(description) }
+            }
+
+            artifacts {
+                archives jar
+                archives javadocJar
+                archives sourcesJar
+                archives testJar
+            }
+
+
+            //下载依赖到的jar包到本地目录
+            task downloadDependencyJars(type: Copy) {
+                group jar.group
+                from configurations.compile
+                from configurations.runtime
+                from configurations.testCompile
+                from configurations.testRuntime
+                into "${buildDir}/libs-all"
+                description = "下载依赖到的jar包到本地目录${destinationDir}。"
+                doFirst { logger.info(description) }
+                doLast {
+                    inputs.files.each { logger.debug("复制文件：${it.absolutePath}") }
+                }
+            }
+        }
+    }
+}

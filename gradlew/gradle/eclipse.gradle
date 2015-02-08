@@ -1,0 +1,62 @@
+/**
+ * eclipse插件的设置
+ */
+allprojects { gradleProject ->
+    afterEvaluate {
+        plugins.withType(EclipsePlugin) {
+            globalCleanupProject.dependsOn 'cleanEclipse'
+            globalUpdateProject.dependsOn 'cleanEclipse', 'eclipse'
+
+            //清理.settings目录的任务
+            task cleanEclipseSettingsDir(type: Delete) {
+                ext {
+                    eclipseSettingsDir = new File(projectDir, '.settings')
+                }
+                group cleanEclipse.group
+                delete eclipseSettingsDir
+                description = "删除${eclipseSettingsDir}目录。"
+                onlyIf { eclipseSettingsDir.exists() }
+                doFirst { logger.info(description) }
+            }
+            cleanEclipse.dependsOn cleanEclipseSettingsDir
+
+            eclipse {
+                classpath {
+                    if (plugins.hasPlugin(JavaPlugin)) {
+                        //defaultOutputDir = gradleProject.sourceSets.main.output.classesDir
+                        defaultOutputDir = new File(gradleProject.projectDir, 'classes')
+                        downloadSources = true
+                        downloadJavadoc = false
+                    }
+                }
+
+                project { eclipseProject ->
+                    eclipseProject.comment = gradleProject.description
+                }
+                project.file.withXml { xmlProvider ->
+                    def addFilterNode = { Node filteredResource, Long id, String name, Integer type, String arguments ->
+                        Node fileterNode = filteredResource.appendNode('filter')
+                        fileterNode.appendNode('id', id)
+                        fileterNode.appendNode('name', name)
+                        fileterNode.appendNode('type', type)
+                        Node matcherNode = fileterNode.appendNode('matcher')
+                        matcherNode.appendNode('id', 'org.eclipse.ui.ide.multiFilter')
+                        matcherNode.appendNode('arguments', arguments)
+                    }
+
+                    def nodeId = new Date().getTime()
+                    Node projectNode = xmlProvider.asNode()
+                    Node filteredResource = projectNode.appendNode('filteredResources')
+                    addFilterNode(filteredResource, nodeId++, '', 30, '1.0-name-matches-true-false-.svn')
+                    addFilterNode(filteredResource, nodeId++, '', 30, '1.0-name-matches-true-false-build')
+                    if (plugins.hasPlugin(JavaPlugin)) {
+                        addFilterNode(filteredResource, nodeId++, 'classes', 30, '1.0-name-matches-false-false-**')
+                    } else {
+                        addFilterNode(filteredResource, nodeId++, '', 30, '1.0-name-matches-true-false-classes')
+                        addFilterNode(filteredResource, nodeId++, '', 30, '1.0-name-matches-true-false-src')
+                    }
+                }
+            }
+        }
+    }
+}

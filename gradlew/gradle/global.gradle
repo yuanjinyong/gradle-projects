@@ -1,0 +1,48 @@
+/**
+ * Gradle的全局设置
+ */
+//logger.debug "gradle本地缓存目录： $gradleCacheDir"
+//logger.debug "gradle全局公用脚本目录： $gradleScriptDir"
+//logger.debug "gradlew启动文件： $gradlewFile"
+configure(project) { project ->
+    //根据模板创建工程
+    task globalCreateProject {
+        group init.group
+        description = "根据模板创建工程。"
+    }
+
+    //生成常用批处理脚本
+    task globalCreateBatFiles {
+        group init.group
+        description = "生成常用批处理脚本。"
+        doLast {
+            createBatFile(new File(projectDir, 'tool-cleanup.bat'), "${gradlewFile} -p ${projectDir} globalCleanupProject")
+            createBatFile(new File(projectDir, 'tool-update.bat'), "${gradlewFile} -p ${projectDir} globalUpdateProject")
+        }
+    }
+}
+
+def createBatFile(File batFile, String cmd) {
+    logger.info("生成文件：${batFile}")
+    batFile.withPrintWriter { printWriter ->
+        printWriter.println("""
+@echo ${cmd}
+@call ${cmd}
+@pause
+""")
+    }
+}
+
+
+allprojects { project ->
+    //清理工程临时文件
+    task globalCleanupProject {
+        group init.group
+        description = "清理工程临时文件"
+    }
+    //刷新工程配置
+    task globalUpdateProject {
+        group init.group
+        description = "刷新工程配置"
+    }
+}

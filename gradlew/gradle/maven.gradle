@@ -1,0 +1,12 @@
+/**
+ * 于Maven、Nexus私服相关的设置
+ */
+allprojects { project ->
+    repositories {
+        maven {
+            name 'Nexus repositories'
+            url 'http://localhost:8081/nexus/content/groups/public/'
+        }
+        //mavenCentral()
+    }
+}
