@@ -1,7 +1,7 @@
 @echo off
 
 ::虚拟盘符
-set DISK_NAME=T
+set DISK_NAME=R
 
 ::当前目录路径
 set CODE_DIR=%~dp0.
