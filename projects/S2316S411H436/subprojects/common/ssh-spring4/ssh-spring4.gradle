@@ -1,0 +1,16 @@
+description = '。'
+
+
+configurations {
+    all*.exclude group: 'org.aspectj', module: 'aspectjweaver'
+    all*.exclude group: 'aopalliance', module: 'aopalliance'
+    all*.exclude group: 'commons-logging', module: 'commons-logging'
+}
+
+dependencies {
+    compile "org.springframework:spring-webmvc:4.1.1.RELEASE"
+    compile "org.springframework:spring-context-support:4.1.1.RELEASE"
+    compile "org.springframework:spring-aspects:4.1.1.RELEASE"
+    compile "org.springframework:spring-orm:4.1.1.RELEASE"
+    compile "org.springframework:spring-test:4.1.1.RELEASE"
+}

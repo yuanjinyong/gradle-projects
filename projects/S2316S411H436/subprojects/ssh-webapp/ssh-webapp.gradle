@@ -1,0 +1,9 @@
+apply plugin: 'war'
+
+
+dependencies {
+    compile project(':common:ssh-jdbc')
+    compile project(':common:ssh-hibernate4')
+    compile project(':common:ssh-spring4')
+    compile project(':common:ssh-struts2')
+}

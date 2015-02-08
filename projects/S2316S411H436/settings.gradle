@@ -9,11 +9,34 @@
  * in the user guide at http://gradle.org/docs/2.2.1/userguide/multi_project_builds.html
  */
 
-/*
+
 // To declare projects as part of a multi-project build use the 'include' method
-include 'shared'
-include 'api'
-include 'services:webservice'
-*/
+// Begin of include
+include 'common:ssh-jdbc'
+include 'common:ssh-hibernate4'
+include 'common:ssh-spring4'
+include 'common:ssh-struts2'
+include 'ssh-webapp'
+// End of include
+
 
 rootProject.name = 'S2316S411H436'
+
+
+settingProjects(rootProject)
+//设置工程的构建脚本名称和工程同名
+def settingProjects(parentProject) {
+    parentProject.children.each { project ->
+        if (project.children) {
+            settingProjects(project)
+        } else {
+            String projectRelativePath = project.path.replaceAll(':', '/').substring(1)
+
+            project.projectDir = new File(settingsDir, "subprojects/${projectRelativePath}")
+            project.buildFileName = "${project.name}.gradle"
+
+            assert project.projectDir.isDirectory()
+            assert project.buildFile.isFile()
+        }
+    }
+}

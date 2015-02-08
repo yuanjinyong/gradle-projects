@@ -1,0 +1,8 @@
+description = '包含了连接MySQL5+、SqlServer2005+、Orale10g+数据库用到的jar包，请根据数据库的类型选择对应的依赖。'
+
+
+dependencies {
+    compile "com.yuan.ssh:mysql:5.0.5" //MySQL5+
+    compile "com.yuan.ssh:ojdbc14:10.2.0.1.0" //Orale10g+
+    compile "com.yuan.ssh:sqljdbc4:1" //SqlServer2005+
+}
