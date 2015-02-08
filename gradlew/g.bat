@@ -15,11 +15,15 @@ if "%GRADLE_HOME%" == "" (
     echo 设置环境变量GRADLE_HOME
     set  GRADLE_HOME=%CUR_DIR%
     setx GRADLE_HOME %CUR_DIR%
+    echo.
+    echo.
 )
 if "%GRADLE_USER_HOME%" == "" (
     echo 设置环境变量GRADLE_USER_HOME
     set  GRADLE_USER_HOME=%CUR_DIR%\.gradle
     setx GRADLE_USER_HOME %CUR_DIR%\.gradle
+    echo.
+    echo.
 )
 
 
@@ -56,6 +60,9 @@ for /f "skip=2 tokens=1,2,*" %%i in ('reg query "%REG_PATH%" /v "Path"') do (
 ECHO Path             is: [!VAR_VALUE!]
 
 endlocal
+
+echo.
+echo.
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -130,6 +137,10 @@ set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
 
 @rem Execute Gradle
 "%JAVA_EXE%" -version
+echo.
+echo.
+echo "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %CMD_LINE_ARGS%
+echo.
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %CMD_LINE_ARGS%
 
 :end
