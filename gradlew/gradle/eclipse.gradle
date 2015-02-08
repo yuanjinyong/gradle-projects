@@ -4,8 +4,21 @@
 allprojects { gradleProject ->
     afterEvaluate {
         plugins.withType(EclipsePlugin) {
-            globalCleanupProject.dependsOn 'cleanEclipse'
+            globalCleanupProject.dependsOn 'cleanEclipse', 'cleanEclipseClassesDir'
             globalUpdateProject.dependsOn 'cleanEclipse', 'eclipse'
+
+            //清理classes目录的任务
+            task cleanEclipseClassesDir(type: Delete) {
+                ext {
+                    eclipseClassesDir = new File(projectDir, 'classes')
+                }
+                group cleanEclipse.group
+                delete eclipseClassesDir
+                description = "删除${eclipseClassesDir}目录。"
+                onlyIf { eclipseClassesDir.exists() }
+                doFirst { logger.info(description) }
+            }
+            //cleanEclipse.dependsOn cleanEclipseSettingsDir
 
             //清理.settings目录的任务
             task cleanEclipseSettingsDir(type: Delete) {
