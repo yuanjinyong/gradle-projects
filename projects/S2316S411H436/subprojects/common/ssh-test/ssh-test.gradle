@@ -1,7 +1,0 @@
-description = '。'
-
-
-dependencies {
-    testCompile project(':common:ssh-hibernate4')
-    testCompile project(':common:ssh-spring4')
-}

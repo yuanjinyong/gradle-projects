@@ -12,7 +12,6 @@
 
 // To declare projects as part of a multi-project build use the 'include' method
 // Begin of include
-include 'common:ssh-test'
 include 'common:ssh-jdbc'
 include 'common:ssh-hibernate4'
 include 'common:ssh-spring4'
