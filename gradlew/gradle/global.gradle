@@ -1,9 +1,7 @@
 /**
  * Gradle的全局设置
  */
-//logger.debug "gradle本地缓存目录： $gradleCacheDir"
-//logger.debug "gradle全局公用脚本目录： $gradleScriptDir"
-//logger.debug "gradlew启动文件： $gradlewFile"
+logger.debug "gradlew目录： $gradlewDir"
 configure(project) { project ->
     //根据模板创建工程
     task globalCreateProject {
@@ -16,6 +14,7 @@ configure(project) { project ->
         group init.group
         description = "生成常用批处理脚本。"
         doLast {
+            def gradlewFile = new File(gradlewDir, 'gradlew.bat')
             createBatFile(new File(projectDir, 'tool-cleanup.bat'), "${gradlewFile} -p ${projectDir} globalCleanupProject")
             createBatFile(new File(projectDir, 'tool-update.bat'), "${gradlewFile} -p ${projectDir} globalUpdateProject")
         }

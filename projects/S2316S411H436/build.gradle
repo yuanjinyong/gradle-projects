@@ -9,22 +9,14 @@
 
 
 ext {
-    //gradle本地缓存目录
-    gradleCacheDir = gradle.gradleUserHomeDir
-    //gradlew启动文件名称
-    gradlewFileName = System.getProperty('os.name').contains('Windows') ? 'gradlew.bat' : 'gradlew'
-    //gradlew启动文件存放目录
-    gradlewDir = new File(gradleCacheDir.parentFile, gradlewFileName).exists() ? gradleCacheDir.parentFile : rootDir
-    //gradlew启动文件
-    gradlewFile = new File(gradlewDir, gradlewFileName)
-    //gradle全局公用脚本存放目录
-    gradleScriptDir = new File(gradlewDir, 'gradle')
+    //gradlew目录
+    gradlewDir = new File(System.getenv('GRADLE_HOME'))
 }
 
-apply from: "$gradleScriptDir/global.gradle"
-apply from: "$gradleScriptDir/java.gradle"
-apply from: "$gradleScriptDir/maven.gradle"
-apply from: "$gradleScriptDir/eclipse.gradle"
+apply from: "$gradlewDir/gradle/global.gradle"
+apply from: "$gradlewDir/gradle/java.gradle"
+apply from: "$gradlewDir/gradle/maven.gradle"
+apply from: "$gradlewDir/gradle/eclipse.gradle"
 
 apply plugin: 'eclipse'
 
