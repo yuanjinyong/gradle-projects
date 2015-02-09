@@ -6,6 +6,7 @@ configurations {
 }
 
 dependencies {
+    compile project(':common:ssh-spring4')
     compile "org.hibernate:hibernate-core:4.3.6.Final" //required
     compile "org.hibernate:hibernate-c3p0:4.3.6.Final" //optional
     compile "org.hibernate:hibernate-ehcache:4.3.6.Final" //optional
