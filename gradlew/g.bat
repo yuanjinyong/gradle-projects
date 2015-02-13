@@ -11,10 +11,10 @@
 set DIRNAME=%~dp0
 set CUR_DIR=%DIRNAME:~0,-1%
 ::如果没有设置过环境变量，则先设置
-if "%GRADLE_HOME%" == "" (
-    echo 设置环境变量GRADLE_HOME
-    set  GRADLE_HOME=%CUR_DIR%
-    setx GRADLE_HOME %CUR_DIR%
+if "%GRADLEW_HOME%" == "" (
+    echo 设置环境变量GRADLEW_HOME
+    set  GRADLEW_HOME=%CUR_DIR%
+    setx GRADLEW_HOME %CUR_DIR%
     echo.
     echo.
 )
@@ -29,7 +29,7 @@ if "%GRADLE_USER_HOME%" == "" (
 
 ::设置Gradle命令搜索路径
 SET REG_PATH=HKEY_CURRENT_USER\Environment
-if exist %GRADLE_HOME%\bin (SET ADD_PATH=%%GRADLE_HOME%%\bin) else (SET ADD_PATH=%%GRADLE_HOME%%)
+if exist %GRADLEW_HOME%\bin (SET ADD_PATH=%%GRADLEW_HOME%%\bin) else (SET ADD_PATH=%%GRADLEW_HOME%%)
 
 Setlocal enabledelayedexpansion
 for /f "skip=2 tokens=1,2,*" %%i in ('reg query "%REG_PATH%" /v "Path"') do (
@@ -42,10 +42,10 @@ reg query "%REG_PATH%" /v "Path"|find /i "%ADD_PATH%"||(reg add "%REG_PATH%" /v 
 ::显示设置后的结果
 ECHO.
 set VAR_VALUE=
-for /f "skip=2 tokens=1,2,*" %%i in ('reg query "%REG_PATH%" /v "GRADLE_HOME"') do (
+for /f "skip=2 tokens=1,2,*" %%i in ('reg query "%REG_PATH%" /v "GRADLEW_HOME"') do (
    set VAR_VALUE=%%k
 )
-ECHO GRADLE_HOME      is: [!VAR_VALUE!]
+ECHO GRADLEW_HOME     is: [!VAR_VALUE!]
 
 set VAR_VALUE=
 for /f "skip=2 tokens=1,2,*" %%i in ('reg query "%REG_PATH%" /v "GRADLE_USER_HOME"') do (

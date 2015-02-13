@@ -10,7 +10,7 @@
 
 ext {
     //gradlew目录
-    gradlewDir = new File(System.getenv('GRADLE_HOME'))
+    gradlewDir = new File(System.getenv('GRADLEW_HOME'))
 }
 
 apply plugin: 'eclipse'
