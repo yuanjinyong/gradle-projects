@@ -15,7 +15,7 @@ create table orders
     orderNumber varchar(255),
     customer_id int(11),
     primary key(id),
-    foreign key (customer_id) references customers(id)
+    foreign key(customer_id) references customers(id)
 );
 
 create table emp

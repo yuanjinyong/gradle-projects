@@ -16,6 +16,8 @@ include 'common:ssh-jdbc'
 include 'common:ssh-hibernate4'
 include 'common:ssh-spring4'
 include 'common:ssh-struts2'
+include 'ssh-config'
+include 'ssh-dbscript'
 include 'ssh-webapp'
 // End of include
 

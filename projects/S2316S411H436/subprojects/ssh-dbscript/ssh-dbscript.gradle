@@ -1,0 +1,15 @@
+buildscript {
+    apply from: "$gradlewDir/gradle/plugins.gradle", to: buildscript
+}
+
+//Flyway，数据库版本管理工具
+apply plugin: 'flyway'
+flyway {
+    //driver = 'com.mysql.jdbc.Driver'
+    url = 'jdbc:mysql://localhost:3306'
+    schemas = ['hibernate4test']
+    user = 'test'
+    password = 'test'
+    //encoding = 'utf-8'
+    //baseDir = 'sql/migration'
+}
