@@ -2,14 +2,26 @@ buildscript {
     apply from: "$gradlewDir/gradle/plugins.gradle", to: buildscript
 }
 
+
 //Flyway，数据库版本管理工具
 apply plugin: 'flyway'
+
 flyway {
     //driver = 'com.mysql.jdbc.Driver'
     url = 'jdbc:mysql://localhost:3306'
     schemas = ['hibernate4test']
     user = 'test'
     password = 'test'
-    //encoding = 'utf-8'
-    //baseDir = 'sql/migration'
+    //encoding = 'UTF-8'
+    //locations = 'db/migration'
+    //baselineOnMigrate = false
+    //target = '1.1'
+}
+
+
+task flywayRebuildDB {
+    group flywayInit.group
+    dependsOn flywayClean, flywayMigrate
+    description = "重建数据库，并升级到最新版本。"
+    doFirst { logger.info(description) }
 }
