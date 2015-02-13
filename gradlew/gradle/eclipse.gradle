@@ -4,34 +4,8 @@
 allprojects { gradleProject ->
     afterEvaluate {
         plugins.withType(EclipsePlugin) {
-            globalCleanupProject.dependsOn 'cleanEclipse', 'cleanEclipseClassesDir'
+            globalCleanupProject.dependsOn 'cleanEclipse'
             globalUpdateProject.dependsOn 'cleanEclipse', 'eclipse'
-
-            //清理classes目录的任务
-            task cleanEclipseClassesDir(type: Delete) {
-                ext {
-                    eclipseClassesDir = new File(projectDir, 'classes')
-                }
-                group cleanEclipse.group
-                delete eclipseClassesDir
-                description = "删除${eclipseClassesDir}目录。"
-                onlyIf { eclipseClassesDir.exists() }
-                doFirst { logger.info(description) }
-            }
-            //cleanEclipse.dependsOn cleanEclipseSettingsDir
-
-            //清理.settings目录的任务
-            task cleanEclipseSettingsDir(type: Delete) {
-                ext {
-                    eclipseSettingsDir = new File(projectDir, '.settings')
-                }
-                group cleanEclipse.group
-                delete eclipseSettingsDir
-                description = "删除${eclipseSettingsDir}目录。"
-                onlyIf { eclipseSettingsDir.exists() }
-                doFirst { logger.info(description) }
-            }
-            cleanEclipse.dependsOn cleanEclipseSettingsDir
 
             eclipse {
                 classpath {
@@ -70,6 +44,34 @@ allprojects { gradleProject ->
                     }
                 }
             }
+
+
+
+
+            if (plugins.hasPlugin(JavaPlugin)) {
+                //清理classes目录的任务
+                task cleanEclipseOutputDir(type: Delete) {
+                    group cleanEclipse.group
+                    delete eclipse.classpath.defaultOutputDir
+                    description = "删除${eclipse.classpath.defaultOutputDir}目录。"
+                    onlyIf { eclipse.classpath.defaultOutputDir.exists() }
+                    doFirst { logger.info(description) }
+                }
+                cleanEclipse.dependsOn cleanEclipseOutputDir
+            }
+
+            //清理.settings目录的任务
+            task cleanEclipseSettingsDir(type: Delete) {
+                ext {
+                    eclipseSettingsDir = new File(projectDir, '.settings')
+                }
+                group cleanEclipse.group
+                delete eclipseSettingsDir
+                description = "删除${eclipseSettingsDir}目录。"
+                onlyIf { eclipseSettingsDir.exists() }
+                doFirst { logger.info(description) }
+            }
+            cleanEclipse.dependsOn cleanEclipseSettingsDir
         }
     }
 }
