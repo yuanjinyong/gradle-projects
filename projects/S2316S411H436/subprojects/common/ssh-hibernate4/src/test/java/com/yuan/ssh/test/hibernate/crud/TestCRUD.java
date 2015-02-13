@@ -84,7 +84,7 @@ public class TestCRUD {
     public void test_update() {
         Customer customer = new Customer();
         customer.setName("monday#test_update");
-        customer.setId(5);
+        customer.setId(6);
 
         SessionFactory sessionFactory = SessionFactoryUtils.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -103,7 +103,7 @@ public class TestCRUD {
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery(hql);
         query.setParameter(0, "monday#test_update_hql");
-        query.setParameter(1, 5);
+        query.setParameter(1, 7);
         query.executeUpdate();
         tx.commit();
         session.close();
@@ -114,7 +114,7 @@ public class TestCRUD {
     @Test
     public void test_delete() {
         Customer customer = new Customer();
-        customer.setId(5);
+        customer.setId(8);
 
         SessionFactory sessionFactory = SessionFactoryUtils.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -132,7 +132,7 @@ public class TestCRUD {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery(hql);
-        query.setParameter(0, 6);
+        query.setParameter(0, 9);
         query.executeUpdate();
         tx.commit();
         session.close();

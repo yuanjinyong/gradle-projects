@@ -84,7 +84,7 @@ public class TestCRUD2 {
     public void test_saveOrUpdate2() {
         Customer customer = new Customer();
         customer.setName("monday#test_saveOrUpdate2");
-        customer.setId(5);
+        customer.setId(10);
 
         //SessionFactory sessionFactory = HibernateUtils.getSessionFactory();//方式一：没有整合Spring+Hibernate时，需要使用hibernate.cfg.xml手动创建
         SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();//方式二：整合Spring+Hibernate成功后，可以从Spring容器中直接获取Bean
@@ -101,7 +101,7 @@ public class TestCRUD2 {
     public void test_update() {
         Customer customer = new Customer();
         customer.setName("monday#test_update");
-        customer.setId(5);
+        customer.setId(11);
 
         //SessionFactory sessionFactory = HibernateUtils.getSessionFactory();//方式一：没有整合Spring+Hibernate时，需要使用hibernate.cfg.xml手动创建
         SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();//方式二：整合Spring+Hibernate成功后，可以从Spring容器中直接获取Bean
@@ -122,7 +122,7 @@ public class TestCRUD2 {
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery(hql);
         query.setParameter(0, "monday#test_update_hql");
-        query.setParameter(1, 5);
+        query.setParameter(1, 12);
         query.executeUpdate();
         tx.commit();
         session.close();
@@ -133,7 +133,7 @@ public class TestCRUD2 {
     @Test
     public void test_delete() {
         Customer customer = new Customer();
-        customer.setId(5);
+        customer.setId(13);
 
         //SessionFactory sessionFactory = HibernateUtils.getSessionFactory();//方式一：没有整合Spring+Hibernate时，需要使用hibernate.cfg.xml手动创建
         SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();//方式二：整合Spring+Hibernate成功后，可以从Spring容器中直接获取Bean
@@ -153,7 +153,7 @@ public class TestCRUD2 {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery(hql);
-        query.setParameter(0, 6);
+        query.setParameter(0, 14);
         query.executeUpdate();
         tx.commit();
         session.close();

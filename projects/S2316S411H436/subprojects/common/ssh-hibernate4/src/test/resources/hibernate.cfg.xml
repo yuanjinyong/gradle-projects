@@ -8,8 +8,8 @@
 		<!-- 基本配置：JDBC方式 -->
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hibernate4demo?useUnicode=true&amp;characterEncoding=utf-8</property>
-		<property name="hibernate.connection.username">root</property>
-		<property name="hibernate.connection.password">123456</property>
+		<property name="hibernate.connection.username">test</property>
+		<property name="hibernate.connection.password">test</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
 
