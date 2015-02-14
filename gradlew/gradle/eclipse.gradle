@@ -10,8 +10,9 @@ allprojects { gradleProject ->
             eclipse {
                 classpath {
                     if (plugins.hasPlugin(JavaPlugin)) {
-                        //defaultOutputDir = gradleProject.sourceSets.main.output.classesDir
-                        defaultOutputDir = new File(gradleProject.projectDir, 'classes')
+                        //如果是Webapp工程，则输出到WEB-INF/classes
+                        def classesPath = plugins.hasPlugin(WarPlugin) ? "${gradleProject.webAppDirName}/WEB-INF/classes" : "classes"
+                        defaultOutputDir = new File(gradleProject.projectDir, classesPath)
                         downloadSources = true
                         downloadJavadoc = false
                     }
@@ -19,6 +20,18 @@ allprojects { gradleProject ->
 
                 project { eclipseProject ->
                     eclipseProject.comment = gradleProject.description
+                }
+                project.file.whenMerged { eclipseProject ->
+                    if (plugins.hasPlugin(JavaPlugin)) {
+                        //如果是作为Webapp工程的jar包工程，则把classes输出到Webapp工程下，Webapp工程不需要过滤任何目录
+                        if (gradleProject.hasProperty('webappProject') && gradleProject.webappProject != gradleProject) {
+                            def classesDir = new File(gradleProject.webappProject.projectDir, "${gradleProject.webappProject.webAppDirName}/WEB-INF/classes")
+                            if (!classesDir.exists()) {
+                                classesDir.mkdirs()
+                            }
+                            linkedResources.add name: 'classes', type: 2, location: classesDir.absolutePath.replaceAll('\\\\', '/')
+                        }
+                    }
                 }
                 project.file.withXml { xmlProvider ->
                     def addFilterNode = { Node filteredResource, Long id, String name, Integer type, String arguments ->
@@ -34,10 +47,11 @@ allprojects { gradleProject ->
                     def nodeId = new Date().getTime()
                     Node projectNode = xmlProvider.asNode()
                     Node filteredResource = projectNode.appendNode('filteredResources')
+                    //所有工程过滤掉svn目录和Gradle构建临时目录
                     addFilterNode(filteredResource, nodeId++, '', 30, '1.0-name-matches-true-false-.svn')
                     addFilterNode(filteredResource, nodeId++, '', 30, '1.0-name-matches-true-false-build')
                     if (plugins.hasPlugin(JavaPlugin)) {
-                        addFilterNode(filteredResource, nodeId++, 'classes', 30, '1.0-name-matches-false-false-**')
+                        //addFilterNode(filteredResource, nodeId++, 'classes', 30, '1.0-name-matches-false-false-**')
                     } else {
                         addFilterNode(filteredResource, nodeId++, '', 30, '1.0-name-matches-true-false-classes')
                         addFilterNode(filteredResource, nodeId++, '', 30, '1.0-name-matches-true-false-src')
