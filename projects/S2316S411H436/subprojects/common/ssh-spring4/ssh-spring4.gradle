@@ -1,6 +1,9 @@
 description = '。'
 
 
+apply plugin: 'java'
+
+
 configurations {
     all*.exclude group: 'org.aspectj', module: 'aspectjweaver'
     //all*.exclude group: 'aopalliance', module: 'aopalliance'

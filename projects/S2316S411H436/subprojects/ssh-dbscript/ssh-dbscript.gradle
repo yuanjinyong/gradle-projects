@@ -3,6 +3,7 @@ buildscript {
 }
 
 
+apply plugin: 'java'
 //Flyway，数据库版本管理工具
 apply plugin: 'flyway'
 

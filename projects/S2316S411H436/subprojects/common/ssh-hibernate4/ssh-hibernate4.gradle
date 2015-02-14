@@ -1,6 +1,9 @@
 description = '。'
 
 
+apply plugin: 'java'
+
+
 configurations {
     all*.exclude group: 'xml-apis', module: 'xml-apis'
 }

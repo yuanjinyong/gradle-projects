@@ -11,6 +11,7 @@
 ext {
     //gradlew目录
     gradlewDir = new File(System.getenv('GRADLEW_HOME'))
+    webappProject = project(':ssh-webapp')
 }
 
 apply from: "$gradlewDir/gradle/global.gradle"
@@ -24,6 +25,5 @@ apply plugin: 'eclipse'
 //subprojects.findAll{!it.childProjects}.each { project ->
 configure(subprojects.findAll{!it.childProjects}) { project ->
     apply plugin: 'eclipse'
-    apply plugin: 'java'
     apply plugin: 'maven'
 }
