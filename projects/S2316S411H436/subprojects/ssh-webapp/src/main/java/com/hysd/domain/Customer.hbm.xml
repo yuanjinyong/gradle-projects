@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.hysd.domain">
+	<class name="Customer" table="CUSTOMERS">
+		<cache usage="read-write" /> <!-- 缓存 -->
+		<id name="id" column="id" type="integer">
+			<generator class="increment" />
+		</id>
+		<property name="name" column="NAME" length="255" type="string" />
+		<set name="orders" inverse="true" cascade="save-update,delete">
+			<cache usage="read-write" /> <!-- 缓存 -->
+			<key column="CUSTOMER_ID" />
+			<one-to-many class="Order" />
+		</set>
+	</class>
+</hibernate-mapping>

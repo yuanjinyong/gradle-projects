@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.hysd.domain">
+	<class name="Order" table="ORDERS">
+		<cache usage="read-write" /> <!-- 缓存 -->
+		<id name="id" column="id" type="integer">
+			<generator class="increment" />
+		</id>
+		<property name="orderNumber" column="ORDERNUMBER" length="255"
+			type="string" />
+		<many-to-one name="customer" class="Customer" column="CUSTOMER_ID" />
+	</class>
+</hibernate-mapping>

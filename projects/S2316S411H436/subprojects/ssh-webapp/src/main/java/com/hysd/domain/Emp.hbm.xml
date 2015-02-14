@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.hysd.domain">
+	<class name="Emp" table="EMP">
+		<cache usage="read-write" /> <!-- 缓存 -->
+		<id name="empno" column="EMPNO" length="4" type="integer">
+			<generator class="assigned" />
+		</id>
+		<property name="ename" column="ENAME" length="10" type="string" />
+		<property name="job" column="JOB" length="9" type="string" />
+		<property name="mgr" column="MGR" length="4" type="integer" />
+		<property name="hiredate" column="HIREDATE" type="date" />
+		<property name="sal" column="SAL" type="double" />
+		<property name="comm" column="COMM" type="double" />
+		<property name="deptno" column="DEPTNO" length="2" type="integer" />
+	</class>
+</hibernate-mapping>
