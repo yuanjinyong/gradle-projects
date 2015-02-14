@@ -1,0 +1,13 @@
+description = 'Gradle脚手架插件实现的核心'
+
+
+apply plugin: 'application'
+
+
+applicationName = 'gradle-archetype'
+mainClassName = 'com.yuan.gradle.plugins.archetype.core.AppMain'
+
+
+dependencies {
+    compile project(':gui:gui-core')
+}

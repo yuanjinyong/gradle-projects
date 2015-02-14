@@ -1,0 +1,4 @@
+description = 'Java GUI底层封装库。'
+
+
+apply plugin: 'java'
