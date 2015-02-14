@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yuan.ssh.hibernate.dao.BaseDAO;
 import com.yuan.ssh.test.domain.Emp;
-import com.yuan.ssh.test.spring.service.EmpService;
+import com.yuan.ssh.test.spring.service.EmpServiceT;
 
 
 @Transactional
 //启用事务机制
 @Service("empService")
-public class EmpServiceImpl implements EmpService {
+public class EmpServiceTImpl implements EmpServiceT {
 
     @Resource
     private BaseDAO<Emp> baseDAO;

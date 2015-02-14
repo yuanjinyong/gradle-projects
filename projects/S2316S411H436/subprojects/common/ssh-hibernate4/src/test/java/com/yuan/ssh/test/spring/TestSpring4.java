@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.yuan.ssh.test.domain.Emp;
-import com.yuan.ssh.test.spring.service.EmpService;
+import com.yuan.ssh.test.spring.service.EmpServiceT;
 
 
 /**
@@ -25,7 +25,7 @@ public class TestSpring4 {
         String configLocation = "classpath:applicationContext.xml";// Spring配置文件
         ApplicationContext ctx = new ClassPathXmlApplicationContext(configLocation);
 
-        EmpService empService = (EmpService) ctx.getBean("empService");
+        EmpServiceT empService = (EmpServiceT) ctx.getBean("empServiceT");
 
         // 示例：查询单个
         try {

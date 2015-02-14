@@ -6,7 +6,7 @@ import java.util.List;
 import com.yuan.ssh.test.domain.Emp;
 
 
-public interface EmpService {
+public interface EmpServiceT {
 
     public void saveEmp(Emp emp);
 
