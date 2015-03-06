@@ -31,7 +31,7 @@ public abstract class AbstractTablePartition extends AbstractPartition {
     }
 
     public AbstractTablePartition() {
-
+        initPartition();
     }
 
     @Override

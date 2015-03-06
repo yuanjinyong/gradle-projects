@@ -29,7 +29,7 @@ public abstract class AbstractPage extends AbstractPartition {
     }
 
     public AbstractPage() {
-
+        initPartition();
     }
 
     @Override

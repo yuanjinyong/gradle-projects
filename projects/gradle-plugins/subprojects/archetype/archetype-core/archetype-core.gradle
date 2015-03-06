@@ -10,4 +10,5 @@ mainClassName = 'com.yuan.gradle.plugins.archetype.core.AppMain'
 
 dependencies {
     compile project(':gui:gui-core')
+    compile 'org.springframework:spring-core:4.1.1.RELEASE'
 }

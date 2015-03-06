@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.yuan.gradle.plugins.archetype.core;
+package com.yuan.gradle.plugins.archetype.gui;
 
 
 import java.awt.EventQueue;

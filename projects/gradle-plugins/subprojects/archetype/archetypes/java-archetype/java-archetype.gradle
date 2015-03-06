@@ -1,0 +1,9 @@
+description = '普通Java工程的模板工程。'
+
+
+apply plugin: 'java'
+
+
+dependencies {
+    compile project(':archetype:archetype-core')
+}

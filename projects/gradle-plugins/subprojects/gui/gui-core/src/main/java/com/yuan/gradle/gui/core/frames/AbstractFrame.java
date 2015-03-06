@@ -41,15 +41,14 @@ public abstract class AbstractFrame extends JFrame implements ActionListener {
      * @throws HeadlessException
      */
     public AbstractFrame() throws HeadlessException {
-        initFrame();
     }
 
     /**
      * @param gc
      */
     public AbstractFrame(GraphicsConfiguration gc) {
+
         super(gc);
-        initFrame();
     }
 
     /**
@@ -58,7 +57,6 @@ public abstract class AbstractFrame extends JFrame implements ActionListener {
      */
     public AbstractFrame(String title) throws HeadlessException {
         super(title);
-        initFrame();
     }
 
     /**
@@ -67,7 +65,6 @@ public abstract class AbstractFrame extends JFrame implements ActionListener {
      */
     public AbstractFrame(String title, GraphicsConfiguration gc) {
         super(title, gc);
-        initFrame();
     }
 
     protected void initFrame() {

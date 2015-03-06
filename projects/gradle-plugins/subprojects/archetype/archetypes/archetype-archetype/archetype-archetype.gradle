@@ -1,0 +1,9 @@
+description = 'Gradle脚手架插件可以解析的原型工程的原型工程。'
+
+
+apply plugin: 'java'
+
+
+dependencies {
+    compile project(':archetype:archetype-core')
+}

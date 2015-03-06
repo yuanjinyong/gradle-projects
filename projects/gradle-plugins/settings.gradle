@@ -15,7 +15,8 @@
 include 'gui:gui-core'
 include 'archetype:archetype-core'
 include 'archetype:archetype-plugin'
-include 'archetype:archetype-archetype'
+include 'archetype:archetypes:archetype-archetype'
+include 'archetype:archetypes:java-archetype'
 // End of include
 
 
