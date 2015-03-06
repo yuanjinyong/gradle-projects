@@ -4,7 +4,8 @@
 set DISK_NAME=T
 
 ::当前目录路径
-set CODE_DIR=%~dp0.
+set CODE_DIR=%~dp0
+set CODE_DIR=%CODE_DIR:~0,-1%
 
 ::如果当前批处理已经在要创建的虚拟盘下了，则不再创建虚拟磁盘
 if "%CODE_DIR:~0,1%" == "%DISK_NAME%" (
@@ -51,12 +52,16 @@ set FILE_NAME="%STARTUP_DIR%\CreateVirtualDisks_%DISK_NAME%.bat"
 
 ::生成创建虚拟盘符的批处理文件
 echo 生成创建虚拟盘符的批处理文件%FILE_NAME%
-echo subst /d %DISK_NAME%: > %FILE_NAME%
-echo subst %DISK_NAME%: "%CODE_DIR%" >> %FILE_NAME%
+echo ::先删除再创建> %FILE_NAME%
+echo if exist %DISK_NAME%: (>> %FILE_NAME%
+echo     subst /d %DISK_NAME%:>> %FILE_NAME%
+echo )>> %FILE_NAME%
+echo subst %DISK_NAME%: "%CODE_DIR%">> %FILE_NAME%
 
 ::执行创建虚拟盘符的批处理文件
 echo 执行创建虚拟盘符的批处理文件%FILE_NAME%
 call %FILE_NAME%
 
-
+echo.
+echo.
 pause
