@@ -67,7 +67,7 @@ public class AppFrame extends AbstractFrame {
     private Field<JTextField> archiveBaseNameField;
     private Field<JTextField> versionField;
     private Field<JTextField> packageField;
-    private Field<JFileField> settingsGradleField;
+    private Field<JFileField> settingsFileField;
     private Field<JComboBoxField<String>> archetypeField;
     private AbstractArchetype archetypeParamsPt;
     private BasicTablePartition t2;
@@ -210,7 +210,7 @@ public class AppFrame extends AbstractFrame {
                 packageField = createTextField("Package：", groupField.getField().getText() + "."
                         + archiveBaseNameField.getField().getText());
                 descriptionField = createTextField("Description：", "");
-                settingsGradleField = createFileField("Root Project's Settings File：", "", "请选择根工程的settings.gradle文件",
+                settingsFileField = createFileField("Root Project's Settings File：", "", "请选择根工程的settings.gradle文件",
                         JFileChooser.FILES_ONLY, new FileFilter() {
                     @Override
                     public boolean accept(File f) {
@@ -229,9 +229,9 @@ public class AppFrame extends AbstractFrame {
                 content.addFieldRow(versionField);
                 content.addFieldRow(packageField);
                 content.addFieldRow(descriptionField);
-                content.addFieldRow(settingsGradleField);
+                content.addFieldRow(settingsFileField);
                 content.addFieldCol(groupField, archiveBaseNameField, versionField, packageField, descriptionField,
-                        settingsGradleField);
+                        settingsFileField);
                 return content;
             }
         };
@@ -256,7 +256,13 @@ public class AppFrame extends AbstractFrame {
                 t1.addFieldRow(archetypeField);
                 t1.addFieldCol(archetypeField);
 
+                archetypeParamsPt = createArchetypeParamsPartition(archetypeCache.get(archetypeField.getField()
+                        .getSelectedItem()));
                 t2 = new BasicTablePartition();
+                if (archetypeParamsPt != null) {
+                    t2.addGroupRow(archetypeParamsPt);
+                    t2.addGroupCol(archetypeParamsPt);
+                }
 
                 ContainerTablePartition content = new ContainerTablePartition();
                 content.addGroupRow(t1);
@@ -325,7 +331,7 @@ public class AppFrame extends AbstractFrame {
         archetypeParams.put("package", packageField.getField().getText());
         archetypeParams.put("packagePath", packageField.getField().getText().replaceAll(".", "/"));
         archetypeParams.put("description", descriptionField.getField().getText());
-        File settingsFile = settingsGradleField.getField().getFile();
+        File settingsFile = settingsFileField.getField().getFile();
         archetypeParams.put("settingsFile", settingsFile == null ? "" : settingsFile.getAbsolutePath());
 
         archetypeParamsPt.fillArchetypeParams(archetypeParams);

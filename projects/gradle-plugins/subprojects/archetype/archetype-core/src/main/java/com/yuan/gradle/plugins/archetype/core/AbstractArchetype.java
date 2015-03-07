@@ -34,7 +34,7 @@ public abstract class AbstractArchetype extends AbstractPartition {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.yuan.gradle.gui.core.partitions.AbstractPartition#initLayout()
      */
     @Override
@@ -44,19 +44,19 @@ public abstract class AbstractArchetype extends AbstractPartition {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.yuan.gradle.gui.core.partitions.AbstractPartition#initFields()
      */
     @SuppressWarnings("unchecked")
     @Override
     protected void initFields() {
         JTextPane jta = new JTextPane();
-        jta.setSize(100, Short.MAX_VALUE);
+        //jta.setSize(100, Short.MAX_VALUE);
         jta.setText(getArchetypeDescription());
+        jta.setSize(100, 76);
+        jta.setPreferredSize(new Dimension(100, 76));
         jta.setOpaque(false);
         add(jta, BorderLayout.NORTH);
-        jta.setSize(100, jta.getPreferredSize().height);
-        jta.setPreferredSize(new Dimension(100, jta.getPreferredSize().height));
 
         List<Field<? extends Component>> fieldList = getArchetypeFields();
         if (fieldList != null) {
