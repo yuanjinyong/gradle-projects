@@ -1,0 +1,5 @@
+这是一个普通的Java工程
+变量\${archetype.project.version}
+变量${archetype.project.version}替换替换
+\${System.properties.'user.name'}
+${System.properties.'user.name'}
