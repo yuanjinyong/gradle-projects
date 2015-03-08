@@ -6,13 +6,14 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * user guide available at http://gradle.org/docs/2.2.1/userguide/tutorial_java_projects.html
  */
-
-description = 'Gradle插件'
-
 ext {
     //gradlew目录
     gradlewDir = new File(System.getenv('GRADLEW_HOME'))
 }
+
+
+description = 'Gradle插件'
+
 
 apply from: "$gradlewDir/gradle/global.gradle"
 apply from: "$gradlewDir/gradle/java.gradle"

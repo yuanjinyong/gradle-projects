@@ -4,9 +4,14 @@
 package com.yuan.gradle.plugins.archetype.core;
 
 
+import groovy.text.SimpleTemplateEngine;
+import groovy.text.Template;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,10 +91,35 @@ public abstract class AbstractArchetype extends AbstractPartition {
     protected abstract List<Field<? extends Component>> getArchetypeFields();
 
     /**
+     * @param archetype
+     *            原型描述
+     * @param archetypeParams
+     *            原型参数
+     */
+    public void generateArchetype(ArchetypeDescriptor archetype, ProjectInfo project) throws Exception {
+        Map<String, Map<String, Object>> templateParams = buildTemplateParams(project);
+        System.out.println(templateParams);
+        SimpleTemplateEngine engine = new SimpleTemplateEngine();
+        Template template = engine.createTemplate(new File("'"));
+        template.make(templateParams);
+    }
+
+    private Map<String, Map<String, Object>> buildTemplateParams(ProjectInfo project) throws Exception {
+        Map<String, Object> archetypeParams = getArchetypeParams(project);
+        if (archetypeParams == null) {
+            archetypeParams = new HashMap<String, Object>();
+        }
+        archetypeParams.put("project", project);
+        Map<String, Map<String, Object>> templateParams = new HashMap<String, Map<String, Object>>();
+        templateParams.put("archetype", archetypeParams);
+        return templateParams;
+    }
+
+    /**
      * 获取原型的参数。
      *
      * @return 原型的参数
      * @throws Exception
      */
-    public abstract void fillArchetypeParams(Map<String, String> archetypeParams) throws Exception;
+    public abstract Map<String, Object> getArchetypeParams(ProjectInfo project) throws Exception;
 }

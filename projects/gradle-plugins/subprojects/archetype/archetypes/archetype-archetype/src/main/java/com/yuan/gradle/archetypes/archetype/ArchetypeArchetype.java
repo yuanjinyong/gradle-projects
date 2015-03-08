@@ -6,6 +6,7 @@ package com.yuan.gradle.archetypes.archetype;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import javax.swing.JTextField;
 
 import com.yuan.gradle.gui.core.fields.Field;
 import com.yuan.gradle.plugins.archetype.core.AbstractArchetype;
+import com.yuan.gradle.plugins.archetype.core.ProjectInfo;
 import com.yuan.gradle.plugins.archetype.gui.AppFrame;
 import com.yuan.gradle.plugins.archetype.utils.ValidateUtil;
 
@@ -33,7 +35,7 @@ public class ArchetypeArchetype extends AbstractArchetype {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.yuan.gradle.plugins.archetype.core.AbstractArchetype#getArchetypeDescription()
      */
     @Override
@@ -43,7 +45,7 @@ public class ArchetypeArchetype extends AbstractArchetype {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.yuan.gradle.plugins.archetype.core.AbstractArchetype#initArchetypeFields()
      */
     @Override
@@ -60,17 +62,21 @@ public class ArchetypeArchetype extends AbstractArchetype {
 
     /*
      * (non-Javadoc)
-     *
-     * @see com.yuan.gradle.plugins.archetype.core.AbstractArchetype#fillArchetypeParams(java.util.Map)
+     * 
+     * @see
+     * com.yuan.gradle.plugins.archetype.core.AbstractArchetype#getArchetypeParams(com.yuan.gradle.plugins.archetype
+     * .core.ProjectInfo)
      */
     @Override
-    public void fillArchetypeParams(Map<String, String> archetypeParams) throws Exception {
+    public Map<String, Object> getArchetypeParams(ProjectInfo project) throws Exception {
         ValidateUtil.isEmptyString(idField.getField().getText(), "原型ID不能为空！");
         ValidateUtil.isEmptyString(nameField.getField().getText(), "原型名称不能为空！");
         ValidateUtil.isEmptyString(classField.getField().getText(), "实现类不能为空！");
 
+        Map<String, Object> archetypeParams = new HashMap<String, Object>();
         archetypeParams.put("archetypeId", idField.getField().getText());
         archetypeParams.put("archetypeName", nameField.getField().getText());
         archetypeParams.put("implementationClass", classField.getField().getText());
+        return archetypeParams;
     }
 }
