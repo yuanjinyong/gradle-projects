@@ -23,7 +23,7 @@ import javax.swing.text.Document;
  * @author Yuanjy
  *
  */
-public class JFileField extends JPanel {
+public class JFileWidget extends JPanel implements Widget<File> {
     private static final long serialVersionUID = 1L;
     // 文件路径输入框
     private JTextField textField;
@@ -32,29 +32,29 @@ public class JFileField extends JPanel {
     // 文件选择对话框
     private JFileChooser fileChooser;
 
-    public JFileField() {
+    public JFileWidget() {
         this((String) null, (FileSystemView) null);
     }
 
-    public JFileField(String currentDirectory) {
+    public JFileWidget(String currentDirectory) {
         this(currentDirectory, (FileSystemView) null);
     }
 
-    public JFileField(String currentDirectory, FileSystemView fsv) {
+    public JFileWidget(String currentDirectory, FileSystemView fsv) {
         fileChooser = new JFileChooser(currentDirectory, fsv);
         initComponents(currentDirectory, fsv);
     }
 
-    public JFileField(File currentDirectory) {
+    public JFileWidget(File currentDirectory) {
         this(currentDirectory, (FileSystemView) null);
     }
 
-    public JFileField(File currentDirectory, FileSystemView fsv) {
+    public JFileWidget(File currentDirectory, FileSystemView fsv) {
         fileChooser = new JFileChooser(currentDirectory, fsv);
         initComponents(currentDirectory == null ? null : currentDirectory.getAbsolutePath(), fsv);
     }
 
-    public JFileField(FileSystemView fsv) {
+    public JFileWidget(FileSystemView fsv) {
         this((File) null, fsv);
     }
 
@@ -72,7 +72,7 @@ public class JFileField extends JPanel {
                     fileChooser.setCurrentDirectory(new File(textField.getText().trim()));
                 }
 
-                int returnVal = fileChooser.showOpenDialog(JFileField.this);
+                int returnVal = fileChooser.showOpenDialog(JFileWidget.this);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     if (fileChooser.isMultiSelectionEnabled()) {
                         File[] files = fileChooser.getSelectedFiles();
@@ -167,5 +167,27 @@ public class JFileField extends JPanel {
     public synchronized void removeActionListener(ActionListener l) {
         fileChooser.removeActionListener(l);
         textField.removeActionListener(l);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.yuan.gradle.gui.core.fields.ValueChangedEventSource#addValueChangedListener(com.yuan.gradle.gui.core.fields
+     * .ValueChangedListener)
+     */
+    @Override
+    public void addValueChangedListener(ValueChangedListener listener) {
+        getDocument().addDocumentListener(listener);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.yuan.gradle.gui.core.fields.Widget#getValue()
+     */
+    @Override
+    public File getValue() {
+        return getFile();
     }
 }

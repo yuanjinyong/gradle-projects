@@ -22,15 +22,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 
 import com.yuan.gradle.gui.core.fields.Field;
-import com.yuan.gradle.gui.core.fields.JComboBoxField;
-import com.yuan.gradle.gui.core.fields.JFileField;
+import com.yuan.gradle.gui.core.fields.JComboBoxWidget;
+import com.yuan.gradle.gui.core.fields.JFileWidget;
+import com.yuan.gradle.gui.core.fields.JTextWidget;
 import com.yuan.gradle.gui.core.frames.AbstractFrame;
 import com.yuan.gradle.gui.core.panels.NavigateBar;
 import com.yuan.gradle.gui.core.panels.TitleBar;
@@ -41,8 +40,10 @@ import com.yuan.gradle.plugins.archetype.core.AbstractArchetype;
 import com.yuan.gradle.plugins.archetype.core.ArchetypeDescriptor;
 import com.yuan.gradle.plugins.archetype.core.ArchetypeService;
 import com.yuan.gradle.plugins.archetype.core.BasicArchetype;
+import com.yuan.gradle.plugins.archetype.core.FieldValueChangedListener;
 import com.yuan.gradle.plugins.archetype.core.ProjectInfo;
 import com.yuan.gradle.plugins.archetype.utils.LogUtil;
+import com.yuan.gradle.plugins.archetype.utils.StringUtil;
 import com.yuan.gradle.plugins.archetype.utils.ValidateUtil;
 
 
@@ -52,25 +53,26 @@ public class AppFrame extends AbstractFrame {
     private static final String MENUITEM_GUIDE = "使用说明";
     private static final String BTN_CREATE_PROJECT = "创建工程";
 
+    public Field<JFileWidget> projectLocationField;
+    public Field<JTextWidget> projectNameField;
+    public Field<JTextWidget> projectDirField;
+    public Field<JTextWidget> descriptionField;
+    public Field<JTextWidget> groupField;
+    public Field<JTextWidget> archiveBaseNameField;
+    public Field<JTextWidget> versionField;
+    public Field<JTextWidget> packageField;
+    public Field<JTextWidget> projectPathField;
+    public Field<JTextWidget> buildFileNameField;;
+    public Field<JFileWidget> settingsFileField;
+    public Field<JComboBoxWidget<String>> archetypeField;
+    public BasicTablePartition archetypePartition;
+    public JButton createProjectButton;
+
     private ArchetypeService service = new ArchetypeService();
     private AbstractArchetype archetype;
 
     //private TabbedPane tabbedPane;
     private TextArea outputArea;
-    private Field<JFileField> projectLocationField;
-    private Field<JTextField> projectNameField;
-    private Field<JTextField> projectDirField;
-    private Field<JTextField> descriptionField;
-    private Field<JTextField> groupField;
-    private Field<JTextField> archiveBaseNameField;
-    private Field<JTextField> versionField;
-    private Field<JTextField> packageField;
-    private Field<JTextField> projectPathField;
-    private Field<JTextField> buildFileNameField;;
-    private Field<JFileField> settingsFileField;
-    private Field<JComboBoxField<String>> archetypeField;
-    private BasicTablePartition archetypePartition;
-    private JButton createProjectButton;
 
     public AppFrame() {
         super("创建Gradle工程");
@@ -162,10 +164,10 @@ public class AppFrame extends AbstractFrame {
                         JFileChooser.DIRECTORIES_ONLY);
                 projectLocationField.getField().setEditable(false);
                 projectLocationField.getField().getDocument()
-                .addDocumentListener(new AppDocumentListener(AppFrame.this, projectLocationField));
+                .addDocumentListener(new FieldValueChangedListener(AppFrame.this, projectLocationField));
                 projectNameField = createTextField("*工程名称：", "sample");
                 projectNameField.getField().getDocument()
-                        .addDocumentListener(new AppDocumentListener(AppFrame.this, projectNameField));
+                        .addDocumentListener(new FieldValueChangedListener(AppFrame.this, projectNameField));
 
                 ContainerTablePartition content = new ContainerTablePartition();
                 content.addFieldRow(projectLocationField);
@@ -188,16 +190,18 @@ public class AppFrame extends AbstractFrame {
             @SuppressWarnings("unchecked")
             @Override
             protected ContainerTablePartition createContentPane() {
-                groupField = createTextField("Group：", "com.yuan");
+                groupField = createTextField("*Group：", "com.yuan");
                 groupField.getField().setToolTipText("项目组。");
                 groupField.getField().getDocument()
-                        .addDocumentListener(new AppDocumentListener(AppFrame.this, groupField));
+                        .addDocumentListener(new FieldValueChangedListener(AppFrame.this, groupField));
                 archiveBaseNameField = createTextField("ArchiveBaseName：", "");
                 archiveBaseNameField.getField().setToolTipText("输出构件名称。");
                 versionField = createTextField("Version：", "1.0.0-SNAPSHOT");
                 versionField.getField().setToolTipText("输出构件版本号。");
                 packageField = createTextField("Package：", "");
                 packageField.getField().setToolTipText("工程默认的包名。");
+                packageField.getField().getDocument()
+                .addDocumentListener(new FieldValueChangedListener(AppFrame.this, packageField));
                 updatePackageField();
                 descriptionField = createTextField("Description：", "");
                 descriptionField.getField().setToolTipText("工程描述。");
@@ -278,29 +282,8 @@ public class AppFrame extends AbstractFrame {
         };
     }
 
-    public class AppDocumentListener implements DocumentListener {
-        private AppFrame app;
-        private Field<?> field;
+    public void addFieldValueChangedListener(Field<?> field) {
 
-        public AppDocumentListener(AppFrame app, Field<?> field) {
-            this.app = app;
-            this.field = field;
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            app.fieldValueChanged("insertUpdate", e, field);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            app.fieldValueChanged("removeUpdate", e, field);
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            app.fieldValueChanged("changedUpdate", e, field);
-        }
     }
 
     public void fieldValueChanged(String eventName, DocumentEvent e, Field<?> field) {
@@ -313,6 +296,10 @@ public class AppFrame extends AbstractFrame {
             updateProjectPathField();
         } else if (field == groupField) {
             updatePackageField();
+        }
+
+        if (archetype != null) {
+            archetype.fieldValueChanged(eventName, e, field);
         }
     }
 
@@ -334,13 +321,12 @@ public class AppFrame extends AbstractFrame {
     }
 
     private void updateProjectPathField() {
-        projectPathField.getField().setText(':' + projectNameField.getField().getText());
+        projectPathField.getField().setText(StringUtil.toProjectPath(projectNameField.getField().getText()));
     }
 
     private void updatePackageField() {
-        String projectName = projectNameField.getField().getText();
-        projectName = projectName.toLowerCase().replaceAll("-", ".").replaceAll("_", ".");
-        packageField.getField().setText(groupField.getField().getText() + '.' + projectName);
+        packageField.getField().setText(
+                StringUtil.toPackage(groupField.getField().getText(), projectNameField.getField().getText()));
     }
 
     private void updateArchetypeField() {
@@ -390,6 +376,8 @@ public class AppFrame extends AbstractFrame {
                     break;
                 case BTN_CREATE_PROJECT:
                     createProject();
+                    LogUtil.info("创建工程完成。");
+                    JOptionPane.showMessageDialog(this, "创建工程完成。");
                     break;
                 default:
                     JOptionPane.showMessageDialog(this, actionCommand);
@@ -400,8 +388,9 @@ public class AppFrame extends AbstractFrame {
     }
 
     private void createProject() throws Exception {
-        ValidateUtil.isEmptyString(projectDirField.getField().getText(), "工程位置不能为空！");
-        ValidateUtil.isEmptyString(projectNameField.getField().getText(), "工程名称不能为空！");
+        ValidateUtil.isEmptyString(projectDirField, "工程位置不能为空！");
+        ValidateUtil.isEmptyString(projectNameField, "工程名称不能为空！");
+        ValidateUtil.isEmptyString(groupField, "Group不能为空！");
 
         ProjectInfo project = new ProjectInfo();
         project.setProjectDir(new File(projectDirField.getField().getText()));
@@ -412,9 +401,9 @@ public class AppFrame extends AbstractFrame {
         project.setGroup(groupField.getField().getText());
         project.setArchiveBaseName(archiveBaseNameField.getField().getText());
         project.setVersion(versionField.getField().getText());
-        project.setPkg(packageField.getField().getText());
+        project.setPkg((String) packageField.getValue());
         project.setPkgPath(ValidateUtil.isEmptyString(project.getPkg()) ? "" : project.getPkg().replaceAll("\\.", "/"));
-        project.setSettingsFile(settingsFileField.getField().getFile());
+        project.setSettingsFile((File) settingsFileField.getValue());
 
         archetype.generateArchetype(project);
     }

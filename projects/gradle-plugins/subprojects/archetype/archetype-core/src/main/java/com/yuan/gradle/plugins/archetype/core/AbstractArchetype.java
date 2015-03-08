@@ -30,6 +30,7 @@ import java.util.jar.JarFile;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.event.DocumentEvent;
 
 import org.apache.commons.io.FileUtils;
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -59,7 +60,7 @@ public abstract class AbstractArchetype extends AbstractPartition {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.yuan.gradle.gui.core.partitions.AbstractPartition#initLayout()
      */
     @Override
@@ -69,7 +70,7 @@ public abstract class AbstractArchetype extends AbstractPartition {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.yuan.gradle.gui.core.partitions.AbstractPartition#initFields()
      */
     @SuppressWarnings("unchecked")
@@ -109,6 +110,10 @@ public abstract class AbstractArchetype extends AbstractPartition {
      * @return 原型的参数字段列表
      */
     protected abstract List<Field<? extends Component>> getArchetypeFields();
+
+    public void fieldValueChanged(String eventName, DocumentEvent e, Field<?> field) {
+
+    }
 
     /**
      * @param project

@@ -10,9 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JTextField;
-
 import com.yuan.gradle.gui.core.fields.Field;
+import com.yuan.gradle.gui.core.fields.JTextWidget;
 import com.yuan.gradle.plugins.archetype.core.ArchetypeDescriptor;
 import com.yuan.gradle.plugins.archetype.core.BasicArchetype;
 import com.yuan.gradle.plugins.archetype.core.ProjectInfo;
@@ -26,9 +25,9 @@ import com.yuan.gradle.plugins.archetype.utils.ValidateUtil;
  */
 public class ArchetypeArchetype extends BasicArchetype {
     private static final long serialVersionUID = 1L;
-    private Field<JTextField> idField;
-    private Field<JTextField> nameField;
-    private Field<JTextField> classField;
+    private Field<JTextWidget> idField;
+    private Field<JTextWidget> nameField;
+    private Field<JTextWidget> classField;
 
     public ArchetypeArchetype(AppFrame appFrame, ArchetypeDescriptor achetypeDescriptor) {
         super(appFrame, achetypeDescriptor);
@@ -36,7 +35,7 @@ public class ArchetypeArchetype extends BasicArchetype {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.yuan.gradle.plugins.archetype.core.BasicArchetype#getArchetypeFields()
      */
     @Override
@@ -53,7 +52,7 @@ public class ArchetypeArchetype extends BasicArchetype {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.yuan.gradle.plugins.archetype.core.BasicArchetype#getArchetypeParams(com.yuan.gradle.plugins.archetype.core
      * .ProjectInfo)

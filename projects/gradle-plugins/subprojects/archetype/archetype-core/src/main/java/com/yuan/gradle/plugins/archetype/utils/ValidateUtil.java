@@ -9,6 +9,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.jar.JarEntry;
 
+import com.yuan.gradle.gui.core.fields.Field;
+import com.yuan.gradle.gui.core.fields.Widget;
+
 
 public final class ValidateUtil {
     private ValidateUtil() {
@@ -40,6 +43,26 @@ public final class ValidateUtil {
     public static boolean isEmptyString(String str, String errMsg) throws Exception {
         if (str == null || str.trim().length() == 0) {
             if (errMsg != null) {
+                throw new Exception(errMsg);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断控件值是否为空，如果传入的errMsg不为null，则抛出异常，异常信息为errMsg。
+     *
+     * @param str
+     * @param errMsg
+     * @return
+     * @throws Exception
+     */
+    public static boolean isEmptyString(Field<? extends Widget<?>> field, String errMsg) throws Exception {
+        String value = field.getValue().toString();
+        if (value == null || value.trim().length() == 0) {
+            if (errMsg != null) {
+                //field.getField()
                 throw new Exception(errMsg);
             }
             return true;

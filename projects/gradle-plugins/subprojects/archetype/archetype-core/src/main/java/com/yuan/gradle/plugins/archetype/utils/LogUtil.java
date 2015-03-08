@@ -1,12 +1,9 @@
 package com.yuan.gradle.plugins.archetype.utils;
 
 
-import java.awt.Font;
 import java.awt.TextArea;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class LogUtil {
@@ -15,7 +12,7 @@ public class LogUtil {
     public static final String INFO = "INFO";
     public static final String WARNING = "WARNING";
     public static final String ERROR = "ERROR";
-    private static final Map<String, Font> fontMap = new HashMap<String, Font>();
+    //private static final Map<String, Font> fontMap = new HashMap<String, Font>();
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private static TextArea outputArea;

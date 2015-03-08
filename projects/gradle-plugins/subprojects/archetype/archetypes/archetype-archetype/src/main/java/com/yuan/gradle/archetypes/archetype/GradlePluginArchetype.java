@@ -10,13 +10,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
 
 import com.yuan.gradle.gui.core.fields.Field;
+import com.yuan.gradle.gui.core.fields.JTextWidget;
 import com.yuan.gradle.plugins.archetype.core.ArchetypeDescriptor;
 import com.yuan.gradle.plugins.archetype.core.BasicArchetype;
+import com.yuan.gradle.plugins.archetype.core.FieldValueChangedListener;
 import com.yuan.gradle.plugins.archetype.core.ProjectInfo;
 import com.yuan.gradle.plugins.archetype.gui.AppFrame;
+import com.yuan.gradle.plugins.archetype.utils.StringUtil;
 import com.yuan.gradle.plugins.archetype.utils.ValidateUtil;
 
 
@@ -26,9 +29,9 @@ import com.yuan.gradle.plugins.archetype.utils.ValidateUtil;
  */
 public class GradlePluginArchetype extends BasicArchetype {
     private static final long serialVersionUID = 1L;
-    private Field<JTextField> idField;
-    private Field<JTextField> classNameField;
-    private Field<JTextField> fullClassNameField;
+    private Field<JTextWidget> idField;
+    private Field<JTextWidget> classNameField;
+    private Field<JTextWidget> fullClassNameField;
 
     public GradlePluginArchetype(AppFrame appFrame, ArchetypeDescriptor achetypeDescriptor) {
         super(appFrame, achetypeDescriptor);
@@ -42,16 +45,50 @@ public class GradlePluginArchetype extends BasicArchetype {
     @Override
     protected List<Field<? extends Component>> getArchetypeFields() {
         List<Field<? extends Component>> fieldList = new ArrayList<Field<? extends Component>>();
-        idField = createTextField("*插件ID：", "sample");
-        //idField.getField().getDocument().addDocumentListener(listener);
-        classNameField = createTextField("实现类名：", "SamplePlugin");
-        //classNameField.getField().setEditable(false);
-        fullClassNameField = createTextField("实现类全名：", "com.yuan.plugins.sample.SamplePlugin");
-        //fullClassNameField.getField().setEditable(false);
+        idField = createTextField("*插件ID：", "");
+        idField.getField().getDocument().addDocumentListener(new FieldValueChangedListener(appFrame, idField));
+        classNameField = createTextField("实现类名：", "");
+        classNameField.getField().setEditable(false);
+        fullClassNameField = createTextField("实现类全名：", "");
+        fullClassNameField.getField().setEditable(false);
         fieldList.add(idField);
         fieldList.add(classNameField);
         fieldList.add(fullClassNameField);
+
+        updateAllFields();
         return fieldList;
+    }
+
+    @Override
+    public void fieldValueChanged(String eventName, DocumentEvent e, Field<?> field) {
+        if (field == appFrame.projectNameField) {
+            updateIdField();
+        } else if (field == idField) {
+            updateClassNameField();
+            updateFullClassNameField();
+        } else if (field == appFrame.packageField) {
+            updateFullClassNameField();
+        }
+    }
+
+    private void updateAllFields() {
+        updateIdField();
+        updateClassNameField();
+        updateFullClassNameField();
+    }
+
+    private void updateIdField() {
+        idField.getField().setText(appFrame.projectNameField.getField().getText());
+    }
+
+    private void updateClassNameField() {
+        classNameField.getField().setText(StringUtil.toClassName(idField.getField().getText(), "Plugin"));
+    }
+
+    private void updateFullClassNameField() {
+        fullClassNameField.getField().setText(
+                StringUtil.toFullClassName(appFrame.packageField.getField().getText(), classNameField.getField()
+                        .getText()));
     }
 
     /*
