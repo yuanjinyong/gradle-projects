@@ -20,10 +20,22 @@ public class ArchetypeDescriptor {
 
     private String id;
     private String name;
-    private String implementationClass;
     private String description;
-    private URL resourceUrl;
-    private URL descriptorUrl;
+    private String implementationClass;
+    private URL resources;
+    private URL descriptorFile;
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("{").append("id=").append(id);
+        sb.append(", ").append("name=").append(name);
+        sb.append(", ").append("description=").append(description);
+        sb.append(", ").append("implementationClass=").append(implementationClass);
+        sb.append(", ").append("resources=").append(resources);
+        sb.append(", ").append("descriptorFile=").append(descriptorFile).append('}');
+        return sb.toString();
+    }
 
     public String getId() {
         return id;
@@ -41,6 +53,14 @@ public class ArchetypeDescriptor {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getImplementationClass() {
         return implementationClass;
     }
@@ -49,27 +69,19 @@ public class ArchetypeDescriptor {
         this.implementationClass = implementationClass;
     }
 
-    public URL getResourceUrl() {
-        return resourceUrl;
+    public URL getResources() {
+        return resources;
     }
 
-    public void setResourceUrl(URL resourceUrl) {
-        this.resourceUrl = resourceUrl;
+    public void setResources(URL resources) {
+        this.resources = resources;
     }
 
-    public URL getDescriptorUrl() {
-        return descriptorUrl;
+    public URL getDescriptorFile() {
+        return descriptorFile;
     }
 
-    public void setDescriptorUrl(URL descriptorUrl) {
-        this.descriptorUrl = descriptorUrl;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptorFile(URL descriptorFile) {
+        this.descriptorFile = descriptorFile;
     }
 }

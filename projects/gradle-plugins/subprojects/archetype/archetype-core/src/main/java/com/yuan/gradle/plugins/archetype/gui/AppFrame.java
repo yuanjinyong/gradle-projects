@@ -8,14 +8,7 @@ import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -35,13 +28,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-
 import com.yuan.gradle.gui.core.fields.Field;
 import com.yuan.gradle.gui.core.fields.JComboBoxField;
-import com.yuan.gradle.gui.core.fields.JComboBoxField.ItemType;
 import com.yuan.gradle.gui.core.fields.JFileField;
 import com.yuan.gradle.gui.core.frames.AbstractFrame;
 import com.yuan.gradle.gui.core.panels.NavigateBar;
@@ -51,8 +39,10 @@ import com.yuan.gradle.gui.core.partitions.ContainerTablePartition;
 import com.yuan.gradle.gui.core.partitions.WizardPartition;
 import com.yuan.gradle.plugins.archetype.core.AbstractArchetype;
 import com.yuan.gradle.plugins.archetype.core.ArchetypeDescriptor;
+import com.yuan.gradle.plugins.archetype.core.ArchetypeService;
 import com.yuan.gradle.plugins.archetype.core.BasicArchetype;
 import com.yuan.gradle.plugins.archetype.core.ProjectInfo;
+import com.yuan.gradle.plugins.archetype.utils.LogUtil;
 import com.yuan.gradle.plugins.archetype.utils.ValidateUtil;
 
 
@@ -62,7 +52,7 @@ public class AppFrame extends AbstractFrame {
     private static final String MENUITEM_GUIDE = "使用说明";
     private static final String BTN_CREATE_PROJECT = "创建工程";
 
-    private Map<String, ArchetypeDescriptor> archetypeDescriptorCache;
+    private ArchetypeService service = new ArchetypeService();
     private AbstractArchetype archetype;
 
     //private TabbedPane tabbedPane;
@@ -84,70 +74,11 @@ public class AppFrame extends AbstractFrame {
 
     public AppFrame() {
         super("创建Gradle工程");
-        archetypeDescriptorCache = loadArchetypes();
+        outputArea = new TextArea();
+        LogUtil.setOutputArea(outputArea);
         initFrame();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         //setIconImage(getImage("/image/icon.gif"));
-    }
-
-    /**
-     * 从Classpath中加载原型
-     *
-     * @return
-     */
-    private Map<String, ArchetypeDescriptor> loadArchetypes() {
-        Map<String, ArchetypeDescriptor> archetypeCache = new HashMap<String, ArchetypeDescriptor>();
-        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        try {
-            Resource[] resources = resolver.getResources("classpath*:META-INF/archetypes/*.properties");
-            for (Resource resource : resources) {
-                addArchetypeDescriptor(archetypeCache, resource);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return archetypeCache;
-    }
-
-    private void addArchetypeDescriptor(Map<String, ArchetypeDescriptor> archetypeCache, Resource resource) {
-        InputStream in = null;
-        try {
-            URL url = resource.getURL();
-            String filePath = url.getFile();
-            String archetypeId = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
-            if (archetypeCache.containsKey(archetypeId)) {
-                ArchetypeDescriptor archetype = archetypeCache.get(archetypeId);
-                System.out.println("原型[" + archetypeId + "|" + archetype.getName() + "|"
-                        + archetype.getImplementationClass() + "]中已经在" + archetype.getDescriptorUrl() + "存在，忽略" + url
-                        + "。");
-            } else {
-                in = url.openStream();
-                Properties p = new Properties();
-                p.load(in);
-                ArchetypeDescriptor archetype = new ArchetypeDescriptor();
-                archetypeCache.put(archetypeId, archetype);
-                archetype.setId(archetypeId);
-                archetype.setName(p.getProperty(ArchetypeDescriptor.PROP_NAME));
-                archetype.setImplementationClass(p.getProperty(ArchetypeDescriptor.PROP_CLASS));
-                archetype.setDescription(p.getProperty(ArchetypeDescriptor.DESCRIPTION));
-                archetype.setResourceUrl(new URL(url.getProtocol() + ":"
-                        + filePath.substring(0, filePath.indexOf("META-INF")) + "archetype-resources/" + archetypeId));
-                archetype.setDescriptorUrl(url);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     @Override
@@ -172,9 +103,6 @@ public class AppFrame extends AbstractFrame {
 
     @Override
     protected JPanel createSouthPanel() {
-        outputArea = new TextArea();
-        //outputArea.setRows(2);
-        //        LogUtil.setOutputArea(outputArea);
         JPanel p = new JPanel();
         p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
@@ -234,10 +162,10 @@ public class AppFrame extends AbstractFrame {
                         JFileChooser.DIRECTORIES_ONLY);
                 projectLocationField.getField().setEditable(false);
                 projectLocationField.getField().getDocument()
-                        .addDocumentListener(new AppDocumentListener(AppFrame.this, projectLocationField));
+                .addDocumentListener(new AppDocumentListener(AppFrame.this, projectLocationField));
                 projectNameField = createTextField("*工程名称：", "sample");
                 projectNameField.getField().getDocument()
-                .addDocumentListener(new AppDocumentListener(AppFrame.this, projectNameField));
+                        .addDocumentListener(new AppDocumentListener(AppFrame.this, projectNameField));
 
                 ContainerTablePartition content = new ContainerTablePartition();
                 content.addFieldRow(projectLocationField);
@@ -263,7 +191,7 @@ public class AppFrame extends AbstractFrame {
                 groupField = createTextField("Group：", "com.yuan");
                 groupField.getField().setToolTipText("项目组。");
                 groupField.getField().getDocument()
-                .addDocumentListener(new AppDocumentListener(AppFrame.this, groupField));
+                        .addDocumentListener(new AppDocumentListener(AppFrame.this, groupField));
                 archiveBaseNameField = createTextField("ArchiveBaseName：", "");
                 archiveBaseNameField.getField().setToolTipText("输出构件名称。");
                 versionField = createTextField("Version：", "1.0.0-SNAPSHOT");
@@ -281,16 +209,16 @@ public class AppFrame extends AbstractFrame {
                 buildFileNameField.getField().setToolTipText("构建脚本名称。");
                 settingsFileField = createFileField("Root Project's Settings File：", "",
                         "多工程结构时，Root工程下多工程设置文件。必须为根工程的settings.gradle文件。", JFileChooser.FILES_ONLY, new FileFilter() {
-                            @Override
-                    public boolean accept(File f) {
-                                return f.getName().equals("settings.gradle") || f.isDirectory();
-                            }
+                    @Override
+                            public boolean accept(File f) {
+                        return f.getName().equals("settings.gradle") || f.isDirectory();
+                    }
 
-                            @Override
-                            public String getDescription() {
-                                return "settings.gradle";
-                            }
-                        });
+                    @Override
+                    public String getDescription() {
+                        return "settings.gradle";
+                    }
+                });
 
                 ContainerTablePartition content = new ContainerTablePartition();
                 content.addFieldRow(groupField);
@@ -322,7 +250,6 @@ public class AppFrame extends AbstractFrame {
             protected ContainerTablePartition createContentPane() {
                 BasicTablePartition top = createTopPartition();
                 archetypePartition = new BasicTablePartition();
-                updateArchetypePartition();
 
                 ContainerTablePartition content = new ContainerTablePartition();
                 content.addGroupRow(top);
@@ -333,8 +260,7 @@ public class AppFrame extends AbstractFrame {
 
             @SuppressWarnings("unchecked")
             private BasicTablePartition createTopPartition() {
-                archetypeField = createComboBoxField("*原型：", null, ItemType.TEXT, archetypeDescriptorCache.keySet()
-                        .toArray(new String[0]), "Normal Java Project");
+                archetypeField = createComboBoxField("*原型：", null, new String[0], "");
 
                 BasicTablePartition top = new BasicTablePartition();
                 top.addFieldRow(archetypeField);
@@ -348,34 +274,6 @@ public class AppFrame extends AbstractFrame {
                 if (ItemEvent.SELECTED == e.getStateChange()) {
                     updateArchetypePartition();
                 }
-            }
-
-            private void updateArchetypePartition() {
-                archetype = createArchetype(archetypeDescriptorCache.get(archetypeField.getField().getSelectedItem()));
-                if (archetype != null) {
-                    archetypePartition.resetLayout();
-                    archetypePartition.addGroupRow(archetype);
-                    archetypePartition.addGroupCol(archetype);
-                }
-            }
-
-            private AbstractArchetype createArchetype(ArchetypeDescriptor archetypeDescriptor) {
-                try {
-                    String clzName = archetypeDescriptor.getImplementationClass();
-                    if (ValidateUtil.isEmptyString(clzName)) {
-                        return new BasicArchetype(AppFrame.this, archetypeDescriptor);
-                    }
-
-                    Class<?> clz = Class.forName(clzName.trim());
-                    Constructor<?> con = clz.getConstructor(new Class[] { AppFrame.class, ArchetypeDescriptor.class }); //获取带参数的构造方法
-                    AbstractArchetype archetype = (AbstractArchetype) con.newInstance(new Object[] { AppFrame.this,
-                            archetypeDescriptor }); // 构造方法传入的参数
-                    return archetype;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    showErrorMsg("创建Gradle工程", e.getLocalizedMessage());
-                }
-                return null;
             }
         };
     }
@@ -423,6 +321,7 @@ public class AppFrame extends AbstractFrame {
         updateArchiveBaseNameField();
         updatePackageField();
         updateProjectPathField();
+        updateArchetypeField();
     }
 
     private void updateProjectDirField() {
@@ -442,6 +341,43 @@ public class AppFrame extends AbstractFrame {
         String projectName = projectNameField.getField().getText();
         projectName = projectName.toLowerCase().replaceAll("-", ".").replaceAll("_", ".");
         packageField.getField().setText(groupField.getField().getText() + '.' + projectName);
+    }
+
+    private void updateArchetypeField() {
+        for (String item : service.getArchetypeList()) {
+            archetypeField.getField().addItem(item);
+        }
+        archetypeField.getField().setSelectedIndex(0);
+        updateArchetypePartition();
+    }
+
+    private void updateArchetypePartition() {
+        archetype = createArchetype(service
+                .getArchetypeDescriptor((String) archetypeField.getField().getSelectedItem()));
+        if (archetype != null) {
+            archetypePartition.resetLayout();
+            archetypePartition.addGroupRow(archetype);
+            archetypePartition.addGroupCol(archetype);
+        }
+    }
+
+    private AbstractArchetype createArchetype(ArchetypeDescriptor archetypeDescriptor) {
+        try {
+            String clzName = archetypeDescriptor.getImplementationClass();
+            if (ValidateUtil.isEmptyString(clzName)) {
+                return new BasicArchetype(AppFrame.this, archetypeDescriptor);
+            }
+
+            Class<?> clz = Class.forName(clzName.trim());
+            Constructor<?> con = clz.getConstructor(new Class[] { AppFrame.class, ArchetypeDescriptor.class }); //获取带参数的构造方法
+            AbstractArchetype archetype = (AbstractArchetype) con.newInstance(new Object[] { AppFrame.this,
+                    archetypeDescriptor }); // 构造方法传入的参数
+            return archetype;
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getLocalizedMessage(), getTitle(), JOptionPane.ERROR_MESSAGE);
+        }
+        return null;
     }
 
     @Override
