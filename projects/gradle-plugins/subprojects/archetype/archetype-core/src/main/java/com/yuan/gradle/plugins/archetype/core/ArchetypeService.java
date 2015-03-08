@@ -16,6 +16,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 import com.yuan.gradle.plugins.archetype.utils.LogUtil;
+import com.yuan.gradle.plugins.archetype.utils.ValidateUtil;
 
 
 public class ArchetypeService {
@@ -64,14 +65,21 @@ public class ArchetypeService {
         InputStream in = null;
         try {
             URL url = resource.getURL();
-            String filePath = url.getFile();
+            String filePath = url.getPath();
             String archetypeId = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
             if (archetypeCache.containsKey(archetypeId)) {
                 ArchetypeDescriptor archetype = archetypeCache.get(archetypeId);
                 LogUtil.error("原型[" + archetypeId + "|" + archetype.getName() + "|"
-                        + archetype.getImplementationClass() + "]中已经在" + archetype.getDescriptorFile() + "存在，忽略" + url
+                        + archetype.getImplementationClass() + "]已存在[" + archetype.getDescriptorFile() + "]，忽略" + url
                         + "。");
             } else {
+                URL resources = new URL(url.getProtocol(), url.getHost(), filePath.substring(0,
+                        filePath.lastIndexOf('.')));
+                if (!ValidateUtil.isValidateUrl(resources)) {
+                    LogUtil.error("原型[" + archetypeId + "]对应的模板文件目录[" + resources + "]不存在");
+                    return;
+                }
+
                 in = url.openStream();
                 Properties p = new Properties();
                 p.load(in);
@@ -81,8 +89,7 @@ public class ArchetypeService {
                 archetype.setName(p.getProperty(ArchetypeDescriptor.PROP_NAME));
                 archetype.setImplementationClass(p.getProperty(ArchetypeDescriptor.PROP_CLASS));
                 archetype.setDescription(p.getProperty(ArchetypeDescriptor.DESCRIPTION));
-                archetype.setResources(new URL(url.getProtocol() + ":"
-                        + filePath.substring(0, filePath.indexOf("META-INF")) + "archetype-resources/" + archetypeId));
+                archetype.setResources(resources);
                 archetype.setDescriptorFile(url);
                 LogUtil.info(archetype.toString());
             }

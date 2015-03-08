@@ -27,8 +27,8 @@ import com.yuan.gradle.plugins.archetype.utils.ValidateUtil;
 public class GradlePluginArchetype extends BasicArchetype {
     private static final long serialVersionUID = 1L;
     private Field<JTextField> idField;
-    //private Field<JTextField> nameField;
-    private Field<JTextField> classField;
+    private Field<JTextField> classNameField;
+    private Field<JTextField> fullClassNameField;
 
     public GradlePluginArchetype(AppFrame appFrame, ArchetypeDescriptor achetypeDescriptor) {
         super(appFrame, achetypeDescriptor);
@@ -36,24 +36,27 @@ public class GradlePluginArchetype extends BasicArchetype {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.yuan.gradle.plugins.archetype.core.BasicArchetype#getArchetypeFields()
      */
     @Override
     protected List<Field<? extends Component>> getArchetypeFields() {
         List<Field<? extends Component>> fieldList = new ArrayList<Field<? extends Component>>();
-        idField = createTextField("*插件ID：", "java");
-        //nameField = createTextField("*插件名称：", "java");
-        classField = createTextField("*实现类：", "com.yuan.gradle.plugins.java.JavaPlugin");
+        idField = createTextField("*插件ID：", "sample");
+        //idField.getField().getDocument().addDocumentListener(listener);
+        classNameField = createTextField("实现类名：", "SamplePlugin");
+        //classNameField.getField().setEditable(false);
+        fullClassNameField = createTextField("实现类全名：", "com.yuan.plugins.sample.SamplePlugin");
+        //fullClassNameField.getField().setEditable(false);
         fieldList.add(idField);
-        //fieldList.add(nameField);
-        fieldList.add(classField);
+        fieldList.add(classNameField);
+        fieldList.add(fullClassNameField);
         return fieldList;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.yuan.gradle.plugins.archetype.core.BasicArchetype#getArchetypeParams(com.yuan.gradle.plugins.archetype.core
      * .ProjectInfo)
@@ -61,13 +64,13 @@ public class GradlePluginArchetype extends BasicArchetype {
     @Override
     protected Map<String, Object> getArchetypeParams(ProjectInfo project) throws Exception {
         ValidateUtil.isEmptyString(idField.getField().getText(), "插件ID不能为空！");
-        //ValidateUtil.isEmptyString(nameField.getField().getText(), "插件名称不能为空！");
-        ValidateUtil.isEmptyString(classField.getField().getText(), "实现类不能为空！");
+        //ValidateUtil.isEmptyString(classNameField.getField().getText(), "实现类名不能为空！");
+        //ValidateUtil.isEmptyString(fullClassNameField.getField().getText(), "实现类全名不能为空！");
 
         Map<String, Object> archetypeParams = new HashMap<String, Object>();
         archetypeParams.put("pluginId", idField.getField().getText());
-        //archetypeParams.put("pluginName", nameField.getField().getText());
-        archetypeParams.put("implementationClass", classField.getField().getText());
+        archetypeParams.put("className", classNameField.getField().getText());
+        archetypeParams.put("implementationClass", fullClassNameField.getField().getText());
         return archetypeParams;
     }
 }

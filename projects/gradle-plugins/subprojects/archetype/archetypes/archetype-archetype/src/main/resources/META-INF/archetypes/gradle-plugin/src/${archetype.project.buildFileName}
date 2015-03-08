@@ -1,0 +1,48 @@
+//这是一个普通的Gradle插件工程
+apply plugin: "groovy"
+apply plugin: "maven"
+
+
+repositories { mavenLocal() }
+
+
+defaultTasks 'clean', 'jar'
+
+
+group = "${archetype.project.group}"
+version = "${archetype.project.version}"
+
+
+//配置sourceSets，解决java&groovy混合编译的问题
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src/main/groovy', 'src/main/java'] // compile everything in src/ with groovy
+        }
+        java {
+            srcDirs = [] // no source dirs for the java compiler
+        }
+    }
+} 
+
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+}
+
+
+// custom tasks for creating source jars
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+// add source jar tasks as artifacts
+artifacts { archives sourcesJar }
+
+
+// upload to local  
+uploadArchives {  
+    repositories { flatDir { name 'localRepository' } }
+    repositories { localRepository { dirs '../local-repo' } }  
+}
