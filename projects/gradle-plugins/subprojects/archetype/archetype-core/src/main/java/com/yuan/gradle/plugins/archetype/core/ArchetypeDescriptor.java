@@ -16,10 +16,12 @@ import java.net.URL;
 public class ArchetypeDescriptor {
     public static final String PROP_NAME = "archetype-name";
     public static final String PROP_CLASS = "implementation-class";
+    public static final String DESCRIPTION = "description";
 
     private String id;
     private String name;
     private String implementationClass;
+    private String description;
     private URL resourceUrl;
     private URL descriptorUrl;
 
@@ -61,5 +63,13 @@ public class ArchetypeDescriptor {
 
     public void setDescriptorUrl(URL descriptorUrl) {
         this.descriptorUrl = descriptorUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

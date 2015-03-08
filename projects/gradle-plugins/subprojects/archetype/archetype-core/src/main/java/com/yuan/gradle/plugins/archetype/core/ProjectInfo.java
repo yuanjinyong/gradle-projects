@@ -59,6 +59,22 @@ public class ProjectInfo {
      */
     private File settingsFile;
 
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("{").append("projectDir=").append(projectDir);
+        sb.append(", ").append("buildFileName=").append(buildFileName);
+        sb.append(", ").append("path=").append(path);
+        sb.append(", ").append("description=").append(description);
+        sb.append(", ").append("group=").append(group);
+        sb.append(", ").append("archiveBaseName=").append(archiveBaseName);
+        sb.append(", ").append("version=").append(version);
+        sb.append(", ").append("pkg=").append(pkg);
+        sb.append(", ").append("pkgPath=").append(pkgPath);
+        sb.append(", ").append("settingsFile=").append(settingsFile).append('}');
+        return sb.toString();
+    }
+
     public File getProjectDir() {
         return projectDir;
     }

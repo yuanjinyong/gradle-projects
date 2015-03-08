@@ -30,10 +30,12 @@ import com.yuan.gradle.plugins.archetype.gui.AppFrame;
  */
 public abstract class AbstractArchetype extends AbstractPartition {
     private static final long serialVersionUID = 1L;
-    protected AppFrame app;
+    protected AppFrame appFrame;
+    protected ArchetypeDescriptor achetypeDescriptor;
 
-    public AbstractArchetype(AppFrame app) {
-        this.app = app;
+    public AbstractArchetype(AppFrame appFrame, ArchetypeDescriptor achetypeDescriptor) {
+        this.appFrame = appFrame;
+        this.achetypeDescriptor = achetypeDescriptor;
         initPartition();
     }
 
@@ -91,12 +93,10 @@ public abstract class AbstractArchetype extends AbstractPartition {
     protected abstract List<Field<? extends Component>> getArchetypeFields();
 
     /**
-     * @param archetype
-     *            原型描述
-     * @param archetypeParams
-     *            原型参数
+     * @param project
+     *            工程信息
      */
-    public void generateArchetype(ArchetypeDescriptor archetype, ProjectInfo project) throws Exception {
+    public void generateArchetype(ProjectInfo project) throws Exception {
         Map<String, Map<String, Object>> templateParams = buildTemplateParams(project);
         System.out.println(templateParams);
         SimpleTemplateEngine engine = new SimpleTemplateEngine();
@@ -121,5 +121,5 @@ public abstract class AbstractArchetype extends AbstractPartition {
      * @return 原型的参数
      * @throws Exception
      */
-    public abstract Map<String, Object> getArchetypeParams(ProjectInfo project) throws Exception;
+    protected abstract Map<String, Object> getArchetypeParams(ProjectInfo project) throws Exception;
 }

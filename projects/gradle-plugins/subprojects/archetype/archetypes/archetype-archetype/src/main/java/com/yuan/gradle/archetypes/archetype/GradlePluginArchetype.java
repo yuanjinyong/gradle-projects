@@ -13,7 +13,8 @@ import java.util.Map;
 import javax.swing.JTextField;
 
 import com.yuan.gradle.gui.core.fields.Field;
-import com.yuan.gradle.plugins.archetype.core.AbstractArchetype;
+import com.yuan.gradle.plugins.archetype.core.ArchetypeDescriptor;
+import com.yuan.gradle.plugins.archetype.core.BasicArchetype;
 import com.yuan.gradle.plugins.archetype.core.ProjectInfo;
 import com.yuan.gradle.plugins.archetype.gui.AppFrame;
 import com.yuan.gradle.plugins.archetype.utils.ValidateUtil;
@@ -23,30 +24,20 @@ import com.yuan.gradle.plugins.archetype.utils.ValidateUtil;
  * @author Yuanjy
  *
  */
-public class GradlePluginArchetype extends AbstractArchetype {
+public class GradlePluginArchetype extends BasicArchetype {
     private static final long serialVersionUID = 1L;
     private Field<JTextField> idField;
     //private Field<JTextField> nameField;
     private Field<JTextField> classField;
 
-    public GradlePluginArchetype(AppFrame app) {
-        super(app);
+    public GradlePluginArchetype(AppFrame appFrame, ArchetypeDescriptor achetypeDescriptor) {
+        super(appFrame, achetypeDescriptor);
     }
 
     /*
      * (non-Javadoc)
-     * 
-     * @see com.yuan.gradle.plugins.archetype.core.AbstractArchetype#getArchetypeDescription()
-     */
-    @Override
-    protected String getArchetypeDescription() {
-        return "Gradle插件工程。";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.yuan.gradle.plugins.archetype.core.AbstractArchetype#getArchetypeFields()
+     *
+     * @see com.yuan.gradle.plugins.archetype.core.BasicArchetype#getArchetypeFields()
      */
     @Override
     protected List<Field<? extends Component>> getArchetypeFields() {
@@ -64,11 +55,11 @@ public class GradlePluginArchetype extends AbstractArchetype {
      * (non-Javadoc)
      * 
      * @see
-     * com.yuan.gradle.plugins.archetype.core.AbstractArchetype#getArchetypeParams(com.yuan.gradle.plugins.archetype
-     * .core.ProjectInfo)
+     * com.yuan.gradle.plugins.archetype.core.BasicArchetype#getArchetypeParams(com.yuan.gradle.plugins.archetype.core
+     * .ProjectInfo)
      */
     @Override
-    public Map<String, Object> getArchetypeParams(ProjectInfo project) throws Exception {
+    protected Map<String, Object> getArchetypeParams(ProjectInfo project) throws Exception {
         ValidateUtil.isEmptyString(idField.getField().getText(), "插件ID不能为空！");
         //ValidateUtil.isEmptyString(nameField.getField().getText(), "插件名称不能为空！");
         ValidateUtil.isEmptyString(classField.getField().getText(), "实现类不能为空！");
