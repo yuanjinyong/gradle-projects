@@ -26,4 +26,7 @@ apply plugin: 'eclipse'
 configure(subprojects.findAll{!it.childProjects}) { project ->
     apply plugin: 'eclipse'
     apply plugin: 'maven'
+    
+    group = 'com.yuan.gradle.plugins'
+    version = '0.0.1-SNAPSHOT'
 }

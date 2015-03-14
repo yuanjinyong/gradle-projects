@@ -1,0 +1,13 @@
+description = '${archetype.project.description}'
+
+
+apply plugin: 'java'
+
+
+group = '${archetype.project.group}'
+version = '${archetype.project.version}'
+
+
+dependencies {
+    compile 'com.yuan.gradle.plugins:archetype-core:0.0.1-SNAPSHOT'
+}
