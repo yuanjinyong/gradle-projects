@@ -1,4 +1,4 @@
-package com.hysd.service.imp;
+package com.yuan.service.imp;
 
 
 import java.util.List;
@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hysd.domain.Emp;
-import com.hysd.service.EmpService;
+import com.yuan.domain.Emp;
+import com.yuan.service.EmpService;
 import com.yuan.ssh.hibernate.dao.BaseDAO;
 
 

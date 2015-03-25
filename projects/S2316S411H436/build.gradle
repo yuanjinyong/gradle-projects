@@ -23,7 +23,7 @@ apply plugin: 'eclipse'
 
 
 //subprojects.findAll{!it.childProjects}.each { project ->
-configure(subprojects.findAll{!it.childProjects}) { project ->
+configure(subprojects.findAll{ !it.childProjects }) { project ->
     apply plugin: 'eclipse'
     apply plugin: 'maven'
 }

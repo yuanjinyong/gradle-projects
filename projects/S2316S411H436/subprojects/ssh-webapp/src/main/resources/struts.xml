@@ -25,7 +25,7 @@
 	 -->
 
 	
-	<package name="hysd" extends="struts-default">
+	<package name="yuan" extends="struts-default">
 	
 		<default-action-ref name="indexPage" />
 		
@@ -41,7 +41,7 @@
 			<result>/login.jsp</result>
 		</action>
 		
-		<action name="login" method="login" class="com.hysd.action.LoginAction">
+		<action name="login" method="login" class="com.yuan.action.LoginAction">
 			<result name="success">/success.jsp</result>
 			<result name="failure">/failure.jsp</result>
 			<result name="error">/login.jsp</result>

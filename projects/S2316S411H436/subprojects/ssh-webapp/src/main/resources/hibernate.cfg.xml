@@ -41,9 +41,9 @@
 		
 
 		<!-- 领域对象：映射文件方式 -->
-		<mapping resource="com/hysd/domain/Customer.hbm.xml" />
-		<mapping resource="com/hysd/domain/Order.hbm.xml" />
-		<mapping resource="com/hysd/domain/Emp.hbm.xml" />
+		<mapping resource="com/yuan/domain/Customer.hbm.xml" />
+		<mapping resource="com/yuan/domain/Order.hbm.xml" />
+		<mapping resource="com/yuan/domain/Emp.hbm.xml" />
 		<!-- 领域对象：Annotation注解方式
 		<mapping class="实体类全限定名" />
 		 -->

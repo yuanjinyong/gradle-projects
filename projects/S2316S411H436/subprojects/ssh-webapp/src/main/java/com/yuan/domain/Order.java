@@ -1,4 +1,4 @@
-package com.hysd.domain;
+package com.yuan.domain;
 
 import java.io.Serializable;
 

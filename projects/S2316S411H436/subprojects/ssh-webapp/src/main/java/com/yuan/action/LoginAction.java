@@ -1,4 +1,4 @@
-package com.hysd.action;
+package com.yuan.action;
 
 
 import javax.annotation.Resource;
@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.stereotype.Controller;
 
-import com.hysd.domain.Emp;
-import com.hysd.service.EmpService;
 import com.opensymphony.xwork2.ActionSupport;
+import com.yuan.domain.Emp;
+import com.yuan.service.EmpService;
 
 
 @Controller

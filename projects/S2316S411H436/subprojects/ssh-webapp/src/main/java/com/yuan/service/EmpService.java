@@ -1,8 +1,8 @@
-package com.hysd.service;
+package com.yuan.service;
 
 import java.util.List;
 
-import com.hysd.domain.Emp;
+import com.yuan.domain.Emp;
 
 public interface EmpService {
 
