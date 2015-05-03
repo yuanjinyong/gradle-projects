@@ -4,11 +4,11 @@
 set DISK_NAME=R
 
 ::当前目录路径
-set CODE_DIR=%~dp0
-set CODE_DIR=%CODE_DIR:~0,-1%
+set SRC_DIR=%~dp0
+set SRC_DIR=%SRC_DIR:~0,-1%
 
 ::如果当前批处理已经在要创建的虚拟盘下了，则不再创建虚拟磁盘
-if "%CODE_DIR:~0,1%" == "%DISK_NAME%" (
+if "%SRC_DIR:~0,1%" == "%DISK_NAME%" (
     echo 虚拟磁盘%DISK_NAME%已经存在，无需创建。
     pause
     exit /b 0
@@ -48,7 +48,8 @@ goto:CreateVirtualDisks
 :CreateVirtualDisks
 
 ::将要生成到启动目录的批处理文件的名称
-set FILE_NAME="%STARTUP_DIR%\CreateVirtualDisks_%DISK_NAME%.bat"
+set FILE_NAME="%STARTUP_DIR%\CreateVirtualDriver%DISK_NAME%.bat"
+set INI_FILE_NAME="%SRC_DIR%\VirtualDriver%DISK_NAME%.ini"
 
 ::生成创建虚拟盘符的批处理文件
 echo 生成创建虚拟盘符的批处理文件%FILE_NAME%
@@ -56,7 +57,10 @@ echo ::先删除再创建> %FILE_NAME%
 echo if exist %DISK_NAME%: (>> %FILE_NAME%
 echo     subst /d %DISK_NAME%:>> %FILE_NAME%
 echo )>> %FILE_NAME%
-echo subst %DISK_NAME%: "%CODE_DIR%">> %FILE_NAME%
+echo subst %DISK_NAME%: "%SRC_DIR%">> %FILE_NAME%
+echo echo %%date%% %%time%%^> %INI_FILE_NAME%>> %FILE_NAME%
+echo echo %DISK_NAME%="%SRC_DIR%"^>^> %INI_FILE_NAME%>> %FILE_NAME%
+
 
 ::执行创建虚拟盘符的批处理文件
 echo 执行创建虚拟盘符的批处理文件%FILE_NAME%
